@@ -116,9 +116,14 @@
     .pricing{grid-template-columns:1fr;}
     .stats{flex-direction:column;gap:1.5rem;}
     .stat .n{font-size:2.4rem;}
-    nav{padding:0.8rem 1rem;}
-    nav .logo{font-size:1rem;}
-    .dots a{width:7px;height:7px;}
+    nav{padding:0.8rem 1rem;gap:0.5rem;}
+    nav .logo{font-size:1rem;flex-shrink:0;}
+    .dots{gap:0.3rem;}
+    .dots a{width:6px;height:6px;}
+    .price-card{padding:1.2rem;}
+    .price-card-head{flex-wrap:wrap;gap:0.5rem;}
+    .price-card-prices{margin-left:0;}
+    .price-card-setup{font-size:1.15rem;}
   }
 
   /* ── 3-col grid ── */
@@ -190,8 +195,8 @@
     border-bottom:1px solid rgba(108,92,231,0.1);
   }
   nav .logo{font-weight:800;font-size:1.2rem;background:linear-gradient(135deg,var(--a1),var(--a3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-  .dots{display:flex;gap:0.5rem;}
-  .dots a{width:9px;height:9px;border-radius:50%;background:var(--td);transition:all 0.3s;text-decoration:none;}
+  .dots{display:flex;gap:0.5rem;flex-shrink:1;min-width:0;overflow:hidden;}
+  .dots a{width:9px;height:9px;flex-shrink:0;border-radius:50%;background:var(--td);transition:all 0.3s;text-decoration:none;}
   .dots a.active,.dots a:hover{background:var(--a1);box-shadow:0 0 10px rgba(108,92,231,0.4);transform:scale(1.3);}
 
   /* ── Particles ── */
@@ -506,6 +511,7 @@
     <a href="#s-support"></a>
     <a href="#s-partner"></a>
     <a href="#s-pricing"></a>
+    <a href="#s-purchasing-future"></a>
     <a href="#s-cta"></a>
   </div>
 </nav>
