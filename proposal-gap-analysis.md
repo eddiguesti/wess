@@ -52,7 +52,7 @@
 
 ### To Peter / WESS:
 1. **How the email agent actually connects** — do we need access to their mail server? Is it a forwarding rule? An API integration? They'll want to know the mechanics, not just the concept.
-2. **What the process discovery delivers** — the proposal mentions 'process maps and a prioritised roadmap' but could be more specific about the format and timeline.
+2. **What the process discovery delivers** — the proposal mentions 'process maps and a prioritized roadmap' but could be more specific about the format and timeline.
 3. **How phasing works commercially** — is each phase a separate contract? A retainer? A fixed project fee?
 
 ### From Peter / WESS (we need to learn):
@@ -69,5 +69,5 @@
 
 ## TO FIX
 
-1. **Add a system architecture visual** — a diagram showing Opera at the centre, the automation layer around it, email in and all outputs flowing out. The intro sets this up but there is no visual to anchor it.
-2. **Be more specific on the discovery deliverable** — the pricing table says 'process maps and a prioritised roadmap' but does not describe the format or timeline Peter actually receives.
+1. **Add a system architecture visual** — a diagram showing Opera at the center, the automation layer around it, email in and all outputs flowing out. The intro sets this up but there is no visual to anchor it.
+2. **Be more specific on the discovery deliverable** — the pricing table says 'process maps and a prioritized roadmap' but does not describe the format or timeline Peter actually receives.
