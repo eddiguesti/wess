@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dig jengu.ai +short)",
+      "Bash(nslookup jengu.ai)",
+      "WebFetch(domain:c9857dc0.jengu-website.pages.dev)",
+      "WebFetch(domain:www.jengu.ai)",
+      "Bash(ls /Users/edd/Documents/Jengu/wess/detail-*.html)"
+    ]
+  }
+}
