@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WESS — Luxury Hotels &amp; Residences, Mauritius</title>
+<meta name="description" content="WESS Hotels &amp; Residences. Luxury villas and hotels on the shores of Mauritius.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; overflow-x: hidden; background: #0a0a08; }
+body {
+  font-family: var(--font-sans);
+  background: #0a0a08;
+  color: var(--color-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; color: transparent; font-size: 0; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
+
+/* ===== DESIGN TOKENS ===== */
+:root {
+  --color-primary: #3D3426;
+  --color-secondary: #6B6347;
+  --color-accent: #B5A07C;
+  --color-muted: #8A7E65;
+  --color-cream: #FAF7F2;
+  --color-sand: #F0ECE3;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-display: 'Space Grotesk', 'DM Sans', sans-serif;
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ===== LOADING SCREEN ===== */
+.loading-screen {
+  position: fixed; inset: 0; z-index: 10000;
+  background: #0a0a08;
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  transition: opacity 1.2s ease, visibility 1.2s ease;
+}
+.loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loading-crown {
+  width: 48px; height: 44px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 90' fill='%23B5A07C'%3E%3Cpath d='M50 5L30 30L10 15L18 55H82L90 15L70 30Z'/%3E%3Cpath d='M15 60H85V65C85 70 80 75 75 75H25C20 75 15 70 15 65Z'/%3E%3Cpath d='M35 75V85H40V75Z'/%3E%3Cpath d='M60 75V85H65V75Z'/%3E%3C/svg%3E") center/contain no-repeat;
+  opacity: 0; animation: crownPulse 2.4s ease-in-out infinite;
+}
+.loading-screen.active .loading-crown { opacity: 1; }
+@keyframes crownPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+.loading-text {
+  font-family: var(--font-serif);
+  font-size: 0.85rem; font-weight: 300; letter-spacing: 0.3em;
+  color: rgba(181, 160, 124, 0.5); text-transform: uppercase;
+  margin-top: 1.5rem; opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.loading-screen.active .loading-text { opacity: 1; }
+
+/* ===== NAVBAR ===== */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 clamp(1.5rem, 4vw, 5rem); height: 80px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: transparent;
+  transition: background 0.5s ease, backdrop-filter 0.5s ease;
+}
+.navbar.scrolled {
+  background: rgba(10, 10, 8, 0.85);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+}
+.nav-left { display: flex; align-items: center; gap: 0.6rem; }
+.nav-burger {
+  display: flex; flex-direction: column; gap: 6px;
+  cursor: pointer; padding: 8px; position: relative; z-index: 1001;
+  transition: gap 0.4s var(--ease-lux);
+}
+.nav-burger span {
+  display: block; height: 1.5px; background: #fff;
+  transition: all 0.5s var(--ease-lux);
+  transform-origin: center;
+}
+.nav-burger span:nth-child(1) { width: 24px; }
+.nav-burger span:nth-child(2) { width: 18px; }
+.nav-burger span:nth-child(3) { width: 24px; }
+.nav-burger.active { gap: 0; }
+.nav-burger.active span:nth-child(1) { transform: rotate(45deg) translate(1px, 1px); width: 24px; }
+.nav-burger.active span:nth-child(2) { opacity: 0; width: 0; }
+.nav-burger.active span:nth-child(3) { transform: rotate(-45deg) translate(1px, -1px); width: 24px; }
+.nav-label {
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em;
+  text-transform: uppercase; color: rgba(255,255,255,0.7);
+  transition: opacity 0.4s;
+}
+.nav-burger.active + .nav-label { opacity: 0; }
+
+.nav-center {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.nav-logo-icon {
+  width: 36px; height: 32px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 90' fill='%23ffffff'%3E%3Cpath d='M50 5L30 30L10 15L18 55H82L90 15L70 30Z'/%3E%3Cpath d='M15 60H85V65C85 70 80 75 75 75H25C20 75 15 70 15 65Z'/%3E%3Cpath d='M35 75V85H40V75Z'/%3E%3Cpath d='M60 75V85H65V75Z'/%3E%3C/svg%3E") center/contain no-repeat;
+  transition: transform 0.5s var(--ease-lux);
+}
+.nav-logo-text {
+  font-family: var(--font-serif);
+  font-size: 0.9rem; font-weight: 500; letter-spacing: 0.25em;
+  text-transform: uppercase; color: #fff;
+}
+
+.nav-right { display: flex; align-items: center; gap: 1rem; }
+.lang-btn {
+  display: flex; align-items: center; gap: 0.35rem;
+  padding: 0.4rem 0.9rem; font-size: 0.68rem; letter-spacing: 0.04em;
+  border: 1px solid rgba(255,255,255,0.25); border-radius: 20px;
+  color: rgba(255,255,255,0.7); transition: all 0.3s;
+  font-family: var(--font-sans);
+}
+.lang-btn:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+.btn-book {
+  padding: 0.5rem 1.4rem; font-size: 0.68rem; letter-spacing: 0.1em;
+  background: rgba(255,255,255,0.15); color: #fff; border-radius: 4px;
+  font-weight: 500; transition: all 0.4s var(--ease-smooth);
+  border: 1px solid rgba(255,255,255,0.25);
+  font-family: var(--font-sans); text-transform: uppercase;
+}
+.btn-book:hover { background: #fff; color: #1a1510; border-color: #fff; }
+
+/* ===== MEGA MENU ===== */
+.mega-menu {
+  position: fixed; inset: 0; z-index: 999;
+  background: #0d0d0a;
+  display: flex;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.6s var(--ease-lux), visibility 0.6s;
+}
+.mega-menu.active { opacity: 1; visibility: visible; }
+
+.mega-left {
+  flex: 0 0 45%; display: flex; flex-direction: column;
+  justify-content: center; padding: 6rem clamp(2rem, 5vw, 6rem);
+  position: relative;
+}
+.mega-left::after {
+  content: ''; position: absolute; right: 0; top: 10%; bottom: 10%;
+  width: 1px; background: linear-gradient(to bottom, transparent, rgba(181,160,124,0.2), transparent);
+}
+
+.mega-nav { display: flex; flex-direction: column; gap: 0; }
+.mega-nav-item {
+  display: flex; align-items: center; gap: 1.5rem;
+  padding: 1.4rem 0; cursor: pointer; position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  opacity: 0; transform: translateX(-40px);
+  transition: opacity 0.6s ease, transform 0.6s var(--ease-lux);
+}
+.mega-menu.active .mega-nav-item {
+  opacity: 1; transform: translateX(0);
+}
+.mega-nav-item:nth-child(1) { transition-delay: 0.15s; }
+.mega-nav-item:nth-child(2) { transition-delay: 0.22s; }
+.mega-nav-item:nth-child(3) { transition-delay: 0.29s; }
+.mega-nav-item:nth-child(4) { transition-delay: 0.36s; }
+.mega-nav-item:nth-child(5) { transition-delay: 0.43s; }
+.mega-nav-item:nth-child(6) { transition-delay: 0.50s; }
+
+.mega-nav-num {
+  font-family: var(--font-sans);
+  font-size: 0.6rem; font-weight: 500; letter-spacing: 0.15em;
+  color: rgba(181,160,124,0.4); min-width: 2rem;
+  transition: color 0.4s;
+}
+.mega-nav-label {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 300;
+  color: rgba(255,255,255,0.5); letter-spacing: 0.02em;
+  transition: color 0.4s ease, transform 0.4s var(--ease-lux);
+}
+.mega-nav-arrow {
+  font-size: 1.2rem; color: rgba(181,160,124,0);
+  margin-left: auto; transition: all 0.4s var(--ease-lux);
+  transform: translateX(-10px);
+}
+.mega-nav-item:hover .mega-nav-num { color: var(--color-accent); }
+.mega-nav-item:hover .mega-nav-label { color: #fff; transform: translateX(8px); }
+.mega-nav-item:hover .mega-nav-arrow { color: var(--color-accent); transform: translateX(0); }
+.mega-nav-item.active-item .mega-nav-label { color: #fff; }
+.mega-nav-item.active-item .mega-nav-num { color: var(--color-accent); }
+
+.mega-right {
+  flex: 1; position: relative; overflow: hidden;
+}
+.mega-image {
+  position: absolute; inset: 0;
+  opacity: 0; transition: opacity 0.8s ease, transform 1.2s var(--ease-lux);
+  transform: scale(1.08);
+}
+.mega-image.active { opacity: 1; transform: scale(1); }
+.mega-image img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.mega-image-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(13,13,10,0.4) 0%, transparent 60%);
+}
+.mega-image-caption {
+  position: absolute; bottom: 3rem; left: 3rem; right: 3rem;
+  opacity: 0; transform: translateY(15px);
+  transition: opacity 0.6s 0.2s ease, transform 0.6s 0.2s var(--ease-lux);
+}
+.mega-image.active .mega-image-caption { opacity: 1; transform: translateY(0); }
+.mega-image-caption h3 {
+  font-family: var(--font-serif); font-size: 1.6rem; font-weight: 400;
+  color: #fff; margin-bottom: 0.4rem;
+}
+.mega-image-caption p {
+  font-size: 0.8rem; color: rgba(255,255,255,0.6); line-height: 1.6;
+  max-width: 400px;
+}
+
+.mega-bottom {
+  position: absolute; bottom: 3rem; left: clamp(2rem, 5vw, 6rem);
+  display: flex; gap: 3rem; align-items: center;
+  opacity: 0; transform: translateY(15px);
+  transition: opacity 0.6s 0.5s ease, transform 0.6s 0.5s var(--ease-lux);
+}
+.mega-menu.active .mega-bottom { opacity: 1; transform: translateY(0); }
+.mega-contact-item {
+  font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+.mega-contact-item a { color: rgba(255,255,255,0.5); transition: color 0.3s; }
+.mega-contact-item a:hover { color: var(--color-accent); }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative; height: 100vh; min-height: 700px;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: -5%; z-index: 0;
+}
+.hero-bg video, .hero-bg img {
+  width: 110%; height: 110%; object-fit: cover;
+  position: absolute; inset: 0;
+  transform: scale(1.12);
+}
+.hero.revealed .hero-bg video,
+.hero.revealed .hero-bg img {
+  animation: heroZoom 14s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation-delay: 0.2s;
+}
+@keyframes heroZoom {
+  from { transform: scale(1.12); }
+  to { transform: scale(1); }
+}
+
+.hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(170deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 40%, transparent 60%),
+    linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, transparent 25%, rgba(0,0,0,0.35) 75%, rgba(0,0,0,0.7) 100%);
+  opacity: 0;
+}
+.hero.revealed .hero-overlay {
+  animation: overlayReveal 1.8s ease forwards;
+  animation-delay: 0.1s;
+}
+@keyframes overlayReveal { from { opacity: 0; } to { opacity: 1; } }
+
+/* --- Hero content --- */
+.hero-content {
+  position: absolute; z-index: 2;
+  left: clamp(2rem, 5vw, 6rem);
+  top: clamp(8rem, 16vh, 12rem);
+  text-align: left;
+}
+
+.hero-tagline {
+  display: flex; align-items: center; gap: 1rem;
+  font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
+  margin-bottom: 2.2rem; font-weight: 400; color: rgba(255,255,255,0.45);
+  font-family: var(--font-sans);
+  opacity: 0;
+}
+.hero-tagline .tag-line {
+  width: 0; height: 1px; background: rgba(255,255,255,0.4);
+}
+.hero.revealed .hero-tagline {
+  animation: tagFadeIn 0.8s ease forwards;
+  animation-delay: 1s;
+}
+.hero.revealed .hero-tagline .tag-line {
+  animation: lineGrow 1s var(--ease-smooth) forwards;
+  animation-delay: 1.2s;
+}
+@keyframes tagFadeIn {
+  from { opacity: 0; transform: translateX(-15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes lineGrow { from { width: 0; } to { width: 42px; } }
+
+/* --- Headline --- */
+.hero-headline { margin-bottom: 0; }
+.hero-line { display: block; overflow: hidden; }
+.hero-line-inner {
+  display: block;
+  transform: translateY(115%);
+  filter: blur(12px);
+  opacity: 0;
+}
+.hero-line-bold {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 10vw, 8.5rem);
+  font-weight: 700; text-transform: uppercase;
+  color: #fff; line-height: 0.88; letter-spacing: -0.04em;
+}
+.hero-line-script {
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-weight: 300; font-style: italic;
+  color: var(--color-accent);
+  line-height: 1.15; letter-spacing: 0.02em;
+  margin-top: 0.15em;
+}
+
+.hero.revealed .hero-line:nth-child(1) .hero-line-inner {
+  animation: textRevealBold 1.4s var(--ease-lux) forwards;
+  animation-delay: 1.3s;
+}
+.hero.revealed .hero-line:nth-child(2) .hero-line-inner {
+  animation: textRevealBold 1.4s var(--ease-lux) forwards;
+  animation-delay: 1.5s;
+}
+.hero.revealed .hero-line:nth-child(3) .hero-line-inner {
+  animation: textRevealScript 1.6s var(--ease-lux) forwards;
+  animation-delay: 1.8s;
+}
+@keyframes textRevealBold {
+  0% { transform: translateY(115%) translateX(-20px); filter: blur(12px); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translateY(0) translateX(0); filter: blur(0); opacity: 1; }
+}
+@keyframes textRevealScript {
+  0% { transform: translateY(100%) translateX(-30px); filter: blur(14px); opacity: 0; }
+  20% { opacity: 0.8; }
+  100% { transform: translateY(0) translateX(0); filter: blur(0); opacity: 1; }
+}
+
+/* Decorative gold line under headline */
+.hero-accent-line {
+  width: 0; height: 1px; margin-top: 2rem;
+  background: linear-gradient(90deg, var(--color-accent), transparent);
+  opacity: 0;
+}
+.hero.revealed .hero-accent-line {
+  animation: accentLineGrow 1.5s var(--ease-lux) forwards;
+  animation-delay: 2.4s;
+}
+@keyframes accentLineGrow {
+  from { width: 0; opacity: 0; }
+  to { width: 120px; opacity: 0.6; }
+}
+
+/* --- Hero bottom --- */
+.hero-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 3rem clamp(2rem, 5vw, 6rem);
+}
+
+.hero-scroll-indicator { opacity: 0; }
+.hero.revealed .hero-scroll-indicator {
+  animation: fadeUp 0.7s ease forwards;
+  animation-delay: 3.2s;
+}
+.hero-scroll-line {
+  width: 1px; height: 52px; background: rgba(255,255,255,0.1);
+  position: relative; overflow: hidden;
+}
+.hero-scroll-line::after {
+  content: ''; position: absolute; top: -100%; left: 0;
+  width: 100%; height: 100%; background: rgba(255,255,255,0.6);
+  animation: scrollPulse 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes scrollPulse { 0% { top: -100%; } 100% { top: 100%; } }
+
+.hero-bottom-right {
+  text-align: right; opacity: 0;
+}
+.hero.revealed .hero-bottom-right {
+  animation: fadeUp 0.9s ease forwards;
+  animation-delay: 2.6s;
+}
+
+.hero-descriptor {
+  font-family: var(--font-serif); font-style: italic;
+  font-size: 1rem; color: rgba(255,255,255,0.75);
+  line-height: 1.8; font-weight: 300;
+  max-width: 340px; margin-left: auto;
+  margin-bottom: 2rem;
+}
+.hero-descriptor .accent { color: var(--color-accent); }
+
+.hero-btns {
+  display: flex; gap: 0.8rem; justify-content: flex-end;
+  opacity: 0;
+}
+.hero.revealed .hero-btns {
+  animation: btnReveal 1s var(--ease-smooth) forwards;
+  animation-delay: 2.9s;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes btnReveal {
+  from { opacity: 0; transform: translateY(22px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.btn-book-hero {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 1rem 2.4rem;
+  background: #fff; color: #1a1510;
+  font-size: 0.7rem; letter-spacing: 0.16em;
+  text-transform: uppercase; font-weight: 600;
+  transition: all 0.5s var(--ease-smooth);
+  border: none; font-family: var(--font-sans);
+}
+.btn-book-hero:hover {
+  background: var(--color-accent); color: #1a1510;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(181,160,124,0.3);
+}
+.btn-book-hero .arrow { transition: transform 0.4s var(--ease-smooth); }
+.btn-book-hero:hover .arrow { transform: translateX(4px); }
+
+.btn-explore-hero {
+  display: inline-flex; align-items: center;
+  padding: 1rem 2.4rem;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff; font-size: 0.7rem; letter-spacing: 0.14em;
+  text-transform: uppercase; font-weight: 500;
+  transition: all 0.5s var(--ease-smooth);
+  font-family: var(--font-sans);
+}
+.btn-explore-hero:hover {
+  border-color: #fff; background: rgba(255,255,255,0.18);
+}
+
+/* ===== CONTENT SECTIONS (placeholder) ===== */
+.content-placeholder {
+  min-height: 100vh; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  padding: 6rem 3rem; position: relative; z-index: 1;
+}
+.content-placeholder .inner {
+  max-width: 800px; text-align: center;
+}
+.content-placeholder h2 {
+  font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300; color: var(--color-primary); margin-bottom: 1.5rem;
+}
+.content-placeholder p {
+  font-size: 0.95rem; line-height: 1.8; color: var(--color-secondary);
+  max-width: 600px; margin: 0 auto;
+}
+.diamond-deco {
+  width: 12px; height: 12px; margin: 0 auto 2rem;
+  border: 1px solid var(--color-accent); transform: rotate(45deg);
+  opacity: 0.5;
+}
+.reveal {
+  opacity: 0; transform: translateY(45px);
+  transition: opacity 0.9s ease, transform 0.9s var(--ease-lux);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .navbar { height: 65px; }
+  .nav-label { display: none; }
+  .lang-btn { display: none; }
+  .mega-menu { flex-direction: column; }
+  .mega-left { flex: none; padding: 6rem 2rem 2rem; }
+  .mega-left::after { display: none; }
+  .mega-right { flex: 1; min-height: 200px; }
+  .mega-nav-label { font-size: 1.6rem; }
+  .mega-image-caption { left: 1.5rem; right: 1.5rem; bottom: 1.5rem; }
+  .mega-bottom { display: none; }
+  .hero-content { left: 1.5rem; right: 1.5rem; }
+  .hero-line-bold { font-size: clamp(3rem, 12vw, 5rem); }
+  .hero-line-script { font-size: clamp(1.8rem, 7vw, 3rem); }
+  .hero-bottom { flex-direction: column; gap: 2rem; padding: 2rem 1.5rem; }
+  .hero-bottom-right { text-align: left; }
+  .hero-btns { justify-content: flex-start; flex-wrap: wrap; }
+  .hero-descriptor { margin-left: 0; max-width: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div class="loading-screen active" id="loadingScreen">
+  <div class="loading-crown"></div>
+  <div class="loading-text">WESS</div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-left">
+    <button class="nav-burger" id="navBurger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="nav-label">Menu</span>
+  </div>
+  <div class="nav-center">
+    <div class="nav-logo-icon"></div>
+    <span class="nav-logo-text">WESS</span>
+  </div>
+  <div class="nav-right">
+    <button class="lang-btn"><span>&#127760;</span> English <span style="font-size:0.55rem">&#9662;</span></button>
+    <button class="btn-book">Book</button>
+  </div>
+</nav>
+
+<!-- MEGA MENU -->
+<div class="mega-menu" id="megaMenu">
+  <div class="mega-left">
+    <nav class="mega-nav">
+      <div class="mega-nav-item active-item" data-img="0">
+        <span class="mega-nav-num">01</span>
+        <span class="mega-nav-label">Villas</span>
+        <span class="mega-nav-arrow">&rarr;</span>
+      </div>
+      <div class="mega-nav-item" data-img="1">
+        <span class="mega-nav-num">02</span>
+        <span class="mega-nav-label">Hotels</span>
+        <span class="mega-nav-arrow">&rarr;</span>
+      </div>
+      <div class="mega-nav-item" data-img="2">
+        <span class="mega-nav-num">03</span>
+        <span class="mega-nav-label">Beach Residences</span>
+        <span class="mega-nav-arrow">&rarr;</span>
+      </div>
+      <div class="mega-nav-item" data-img="3">
+        <span class="mega-nav-num">04</span>
+        <span class="mega-nav-label">Dining</span>
+        <span class="mega-nav-arrow">&rarr;</span>
+      </div>
+      <div class="mega-nav-item" data-img="4">
+        <span class="mega-nav-num">05</span>
+        <span class="mega-nav-label">Wellness</span>
+        <span class="mega-nav-arrow">&rarr;</span>
+      </div>
+      <div class="mega-nav-item" data-img="5">
+        <span class="mega-nav-num">06</span>
+        <span class="mega-nav-label">Experiences</span>
+        <span class="mega-nav-arrow">&rarr;</span>
+      </div>
+    </nav>
+    <div class="mega-bottom">
+      <div class="mega-contact-item"><a href="tel:+23012345678">+230 123 456 78</a></div>
+      <div class="mega-contact-item"><a href="mailto:stay@wess.mu">stay@wess.mu</a></div>
+    </div>
+  </div>
+  <div class="mega-right">
+    <div class="mega-image active" data-idx="0">
+      <img src="../Legend-Hill-Villa-Blackstone-by-night.webp" alt="WESS Villas">
+      <div class="mega-image-overlay"></div>
+      <div class="mega-image-caption">
+        <h3>Private Villas</h3>
+        <p>Secluded hillside retreats with panoramic ocean views, private pools, and dedicated butler service.</p>
+      </div>
+    </div>
+    <div class="mega-image" data-idx="1">
+      <img src="../xr-mruxm-strmruxrpo-206312_Wide-Hor.jpeg" alt="WESS Hotels">
+      <div class="mega-image-overlay"></div>
+      <div class="mega-image-caption">
+        <h3>Boutique Hotels</h3>
+        <p>Intimate luxury hotels where every detail has been considered, from sunrise to starlight.</p>
+      </div>
+    </div>
+    <div class="mega-image" data-idx="2">
+      <img src="../xr-mruxm-strmruxrgr-142284_Classic-Hor.jpeg" alt="WESS Beach Residences">
+      <div class="mega-image-overlay"></div>
+      <div class="mega-image-caption">
+        <h3>Beach Residences</h3>
+        <p>Step from your terrace onto white sand. The ocean is not a view here &mdash; it is your garden.</p>
+      </div>
+    </div>
+    <div class="mega-image" data-idx="3">
+      <img src="../Legend-Hill-Villa-Blackstone-by-night.webp" alt="WESS Dining">
+      <div class="mega-image-overlay"></div>
+      <div class="mega-image-caption">
+        <h3>Culinary Journeys</h3>
+        <p>From ocean-to-table seafood to Mauritian-Creole fusion, every meal tells a story.</p>
+      </div>
+    </div>
+    <div class="mega-image" data-idx="4">
+      <img src="../xr-mruxm-strmruxrpo-206312_Wide-Hor.jpeg" alt="WESS Wellness">
+      <div class="mega-image-overlay"></div>
+      <div class="mega-image-caption">
+        <h3>Wellness &amp; Spa</h3>
+        <p>Ancient healing traditions meet modern therapies in spaces designed for stillness.</p>
+      </div>
+    </div>
+    <div class="mega-image" data-idx="5">
+      <img src="../xr-mruxm-strmruxrgr-142284_Classic-Hor.jpeg" alt="WESS Experiences">
+      <div class="mega-image-overlay"></div>
+      <div class="mega-image-caption">
+        <h3>Island Experiences</h3>
+        <p>Reef diving, Le Morne trails, private catamaran sunsets &mdash; curated by those who know the island best.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <video autoplay muted loop playsinline poster="../Legend-Hill-Villa-Blackstone-by-night.webp">
+      <source src="../hero.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <p class="hero-tagline">
+      <span>Hotels &amp; Residences</span>
+      <span class="tag-line"></span>
+      <span>Mauritius</span>
+    </p>
+    <h1 class="hero-headline">
+      <span class="hero-line"><span class="hero-line-inner hero-line-bold">Where</span></span>
+      <span class="hero-line"><span class="hero-line-inner hero-line-bold">Paradise</span></span>
+      <span class="hero-line"><span class="hero-line-inner hero-line-script">Begins at Your Door</span></span>
+    </h1>
+    <div class="hero-accent-line"></div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="hero-scroll-indicator">
+      <div class="hero-scroll-line"></div>
+    </div>
+    <div class="hero-bottom-right">
+      <p class="hero-descriptor">
+        Three oceanfront estates on the southern coast of Mauritius.
+        <span class="accent">Villas, hotels, and residences</span>
+        &mdash; each with a character of its own.
+      </p>
+      <div class="hero-btns">
+        <a href="#" class="btn-book-hero">Book Your Stay <span class="arrow">&rarr;</span></a>
+        <a href="#" class="btn-explore-hero">Explore Properties</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Placeholder content section -->
+<section class="content-placeholder">
+  <div class="inner reveal">
+    <div class="diamond-deco"></div>
+    <h2>A New Kind of Luxury on the Indian Ocean</h2>
+    <p>Surrounded by turquoise lagoons, lush tropical gardens, and pristine white-sand beaches, WESS blends contemporary elegance with island warmth. Whether you seek adventure on the reef or stillness by the infinity pool, this is your sanctuary.</p>
+  </div>
+</section>
+
+<script>
+/* ===== LOADING SCREEN ===== */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const ls = document.getElementById('loadingScreen');
+    ls.classList.add('hidden');
+    setTimeout(() => {
+      document.getElementById('hero').classList.add('revealed');
+    }, 200);
+  }, 2200);
+});
+
+/* ===== NAVBAR SCROLL ===== */
+const navbar = document.getElementById('navbar');
+const heroEl = document.getElementById('hero');
+let lastY = 0;
+let navHidden = false;
+
+function onScroll() {
+  const y = window.scrollY;
+  const heroH = heroEl ? heroEl.offsetHeight - 100 : 50;
+  navbar.classList.toggle('scrolled', y > heroH);
+
+  if (y > 300 && y > lastY && !navHidden) {
+    navbar.style.transform = 'translateY(-100%)';
+    navHidden = true;
+  } else if (y < lastY && navHidden) {
+    navbar.style.transform = 'translateY(0)';
+    navHidden = false;
+  }
+  lastY = y;
+}
+navbar.style.transition = 'all 0.4s ease, transform 0.35s ease';
+window.addEventListener('scroll', onScroll, { passive: true });
+
+/* ===== MEGA MENU ===== */
+const burger = document.getElementById('navBurger');
+const megaMenu = document.getElementById('megaMenu');
+const megaItems = document.querySelectorAll('.mega-nav-item');
+const megaImages = document.querySelectorAll('.mega-image');
+
+burger.addEventListener('click', () => {
+  const isOpen = megaMenu.classList.contains('active');
+  burger.classList.toggle('active');
+  megaMenu.classList.toggle('active');
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+});
+
+megaItems.forEach(item => {
+  item.addEventListener('mouseenter', () => {
+    const idx = item.dataset.img;
+    megaItems.forEach(i => i.classList.remove('active-item'));
+    item.classList.add('active-item');
+    megaImages.forEach(img => {
+      img.classList.toggle('active', img.dataset.idx === idx);
+    });
+  });
+});
+
+/* ===== REVEAL ON SCROLL ===== */
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+</script>
+</body>
+</html>
