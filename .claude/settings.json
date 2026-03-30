@@ -6,7 +6,9 @@
       "WebFetch(domain:c9857dc0.jengu-website.pages.dev)",
       "WebFetch(domain:www.jengu.ai)",
       "Bash(ls /Users/edd/Documents/Jengu/wess/detail-*.html)",
-      "Bash(do cp:*)"
+      "Bash(do cp:*)",
+      "Bash(grep -v '^[[:space:]]*$')",
+      "Bash(ls -la /Users/edd/Documents/Jengu/wess/*.html)"
     ]
   }
 }
