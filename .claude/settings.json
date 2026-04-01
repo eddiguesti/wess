@@ -8,7 +8,17 @@
       "Bash(ls /Users/edd/Documents/Jengu/wess/detail-*.html)",
       "Bash(do cp:*)",
       "Bash(grep -v '^[[:space:]]*$')",
-      "Bash(ls -la /Users/edd/Documents/Jengu/wess/*.html)"
+      "Bash(ls -la /Users/edd/Documents/Jengu/wess/*.html)",
+      "Bash(git check-ignore:*)",
+      "Bash(ffprobe -v quiet -print_format json -show_format -show_streams /Users/edd/Documents/Jengu/wess/13908734_3840_2160_60fps.mp4)",
+      "Bash(ffmpeg -y -i /Users/edd/Documents/Jengu/wess/13908734_3840_2160_60fps.mp4 -t 5.875 -vf \"scale=1920:1080\" -c:v libx264 -crf 23 -preset slow -an -movflags +faststart /Users/edd/Documents/Jengu/wess/demo/hero.mp4)",
+      "Bash(ffmpeg -y -i /Users/edd/Documents/Jengu/wess/13908734_3840_2160_60fps.mp4 -t 5.875 -vf \"scale=1920:1080\" -c:v libvpx-vp9 -crf 30 -b:v 0 -an /Users/edd/Documents/Jengu/wess/demo/hero.webm)",
+      "Bash(ffmpeg -y -i /Users/edd/Documents/Jengu/wess/13908734_3840_2160_60fps.mp4 -t 5.875 -vf \"scale=1920:1080\" -c:v libvpx-vp9 -crf 35 -b:v 2M -an /Users/edd/Documents/Jengu/wess/demo/hero.webm)",
+      "Bash(ffprobe -v quiet -show_streams /Users/edd/Documents/Jengu/wess/demo/hero.mp4)",
+      "Bash(ffmpeg -y -i /Users/edd/Documents/Jengu/wess/13908734_3840_2160_60fps.mp4 -t 5.875 -vf \"scale=1920:1080\" -c:v libvpx-vp9 -crf 28 -b:v 6M -an /Users/edd/Documents/Jengu/wess/demo/hero.webm)"
+    ],
+    "additionalDirectories": [
+      "/Users/edd/Documents/Jengu/aruba ocean view"
     ]
   }
 }
